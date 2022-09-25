@@ -4,21 +4,9 @@ import '../model/record.dart';
 import '../screen/graphics.dart';
 
 class Controller extends GetxController {
-  static int selectedvalue = 53;
-  List<Month> data = [
-    Month('Yan', selectedvalue.toDouble()),
-    Month('Fev', 28),
-    Month('Mar', 34),
-    Month('Apr', 32),
-    Month('May', 40),
-    Month('Iyun', 40),
-    Month('Iyul', 40),
-    Month('Avq', 40),
-    Month('Sent', 40),
-    Month('Okt', 40),
-    Month('Noy', 40),
-    Month('Dek', 40),
-  ];
+static int selectedvalue = 55;
+
+
 
   var records = <Record>[].obs;
 
@@ -30,8 +18,7 @@ class Controller extends GetxController {
     records.remove(record);
   }
 
-  void saveValue(int savedValue){
-    savedValue = selectedvalue;
-    update();
-  }
+  // void saveValue(int savedValue){
+  //   savedValue = selectedvalue;
+  // }
 }

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "344905261899",
+    "project_id": "weight-tracker-9ccfb",
+    "storage_bucket": "weight-tracker-9ccfb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344905261899:android:df2f881f17adf2606a7ece",
+        "android_client_info": {
+          "package_name": "com.example.getx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "344905261899-52i10088iqbhnb542evf4c7g6jhfsmlf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.getx",
+            "certificate_hash": "6d0ea420f5daad467d99fd935aaae21e8e28dc63"
+          }
+        },
+        {
+          "client_id": "344905261899-848n5aeik54onj8auf71i35jhun0eic4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuEUFKnE5ihE5FAXEbFV47GEThohaM0QU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "344905261899-848n5aeik54onj8auf71i35jhun0eic4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
