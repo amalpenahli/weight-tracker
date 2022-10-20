@@ -19,7 +19,18 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreen extends State<HistoryScreen> {
-  final Controller _controller = Get.put(Controller());
+  
+ late final Controller _controller ;
+@override
+  void initState(){
+   _controller = Get.put(Controller());
+   super.initState();
+  }
+@override
+  void dispose(){
+    super.dispose();
+    _controller.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:getx/provider/provider.dart';
-
+import 'package:getx/screen/add_record.dart';
 import 'package:getx/screen/auth/login.dart';
 import 'package:getx/screen/auth/register.dart';
 import 'package:getx/screen/home_screen.dart';
 
-import 'package:provider/provider.dart';
 
+import 'package:provider/provider.dart';
+ 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
                     child: Text("sehv"),
                   );
                 } else if (snapshot.hasData) {
-                  return RegisterScreen();
+                  return HomeScreen();
                 } else {
                   return Center(
                     child: CircularProgressIndicator(),

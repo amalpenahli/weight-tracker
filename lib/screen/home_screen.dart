@@ -23,9 +23,9 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
   List page = [
-   AddRecord(),
-   HistoryScreen(),
-   FlutterChart()
+   const AddRecord(),
+   const HistoryScreen(),
+   const FlutterChart()
 
   ];
 

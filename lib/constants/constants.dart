@@ -8,3 +8,15 @@ class Constants{
                                   borderSide:
                                       BorderSide(color: Colors.white, width: 1.0));
 }
+
+class GradientColor{
+ static Decoration decoration=const  BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.white, Colors.green],
+                          begin: Alignment.bottomLeft,
+                          end: Alignment.topLeft,
+                        ),
+                      );
+}
+
+

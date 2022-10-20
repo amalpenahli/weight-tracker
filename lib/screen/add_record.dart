@@ -1,20 +1,21 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:getx/screen/auth/login.dart';
+import 'package:getx/constants/constants.dart';
 import 'package:getx/screen/drawer_screen.dart';
-import 'package:getx/screen/graphics.dart';
-import 'package:getx/screen/history.dart';
 import 'package:intl/intl.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/provider.dart';
 import '../views_model/controller.dart';
+import '../widgets/drawer_card.dart';
+import 'auth/login.dart';
+import 'graphics.dart';
 
 class AddRecord extends StatefulWidget {
   const AddRecord({Key? key}) : super(key: key);
@@ -24,155 +25,57 @@ class AddRecord extends StatefulWidget {
 }
 
 class _AddRecordState extends State<AddRecord> {
+  final Controller controller = Get.put(Controller());
+  late final FirebaseFirestore _firestore;
+  late final FirebaseAuth _firebaseAuth;
+  late final User currentUser;
+  late final CollectionReference usersCollection;
+  late final CollectionReference trackerCollection;
+  late DateTime selectedDate;
+  late final DateTime dateNow;
+  late final TextEditingController noteController;
+  late final TextEditingController nameController;
+  String _note = "Qeyd əlavə et";
+
   @override
   void initState() {
+    _firestore = FirebaseFirestore.instance;
+    _firebaseAuth = FirebaseAuth.instance;
+    currentUser = _firebaseAuth.currentUser!;
+    usersCollection = _firestore.collection('users');
+    trackerCollection = _firestore.collection('tracker');
+    dateNow = DateTime.now();
+    selectedDate = dateNow;
+    noteController = TextEditingController();
+    nameController = TextEditingController();
     super.initState();
   }
 
-  DateTime _selecteddate1 = DateTime.now();
-  TextEditingController note = TextEditingController();
-  TextEditingController nameUpdate = TextEditingController();
-  String _note = "qeyd əlavə et";
+  // getRecord() {
+  //   usersCollection.doc().get().then((value) {
+  //     if (value.exists) {
+  //       print('Document exists on the database');
+  //       print(value.data()!['currentYear']);
+  //     }
+  //     // print(value.data()!['year'].toString());
+  //   });
+  // }
 
-  var initialDate;
-  final _firestore = FirebaseFirestore.instance;
-
-  createInfo() {
-    DocumentReference documentReference = FirebaseFirestore.instance
-        .collection("tracker")
-        .doc(Controller.selectedvalue.toString());
-
-    Map<String, String> info = {
-      "weight": Controller.selectedvalue.toString(),
-      "month": DateFormat('EEE, MMM d,' 'yy').format(_selecteddate1),
-      "userId":
-          Provider.of<ProviderProfile>(context, listen: false).checkUser(),
-    };
-    documentReference.set(info).whenComplete(() => {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const FlutterChart())),
-          print(
-              Provider.of<ProviderProfile>(context, listen: false).checkUser())
-        });
+  @override
+  void dispose() {
+    super.dispose();
+    nameController.dispose();
+    noteController.dispose();
   }
 
-  void datePicker(BuildContext context) async {
-    initialDate = DateTime.now();
-    _selecteddate1 = await showDatePicker(
-            context: context,
-            initialDate: initialDate,
-            firstDate: initialDate.subtract(Duration(days: 365)),
-            lastDate: initialDate.add(Duration(days: 30)),
-            builder: (context, child) {
-              return Theme(
-                  data: ThemeData.light().copyWith(
-                      colorScheme: const ColorScheme(
-                    brightness: Brightness.light,
-                    primary: Colors.black,
-                    onPrimary: Colors.white,
-                    secondary: Colors.yellow,
-                    onSecondary: Colors.yellowAccent,
-                    error: Colors.red,
-                    onError: Colors.orange,
-                    background: Colors.blueAccent,
-                    onBackground: Colors.blueGrey,
-                    surface: Colors.blue,
-                    onSurface: Colors.black26,
-                  )),
-                  child: child ?? const Text(""));
-            }) ??
-        _selecteddate1;
-
-    setState(() {});
-  }
-
-  final Controller controller = Get.put(Controller());
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: const Text("Əlavə et"),
           centerTitle: true,
         ),
-        drawer: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width / 1.5,
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 36.0),
-                  child: CircleAvatar(
-                    minRadius: 30,
-                    maxRadius: 55,
-                    backgroundColor: Colors.lightBlueAccent,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                          FirebaseAuth.instance.currentUser!.displayName
-                              .toString(),
-                          style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.lightBlueAccent)),
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text("adını dəyiş"),
-                                    content: TextField(
-                                      controller: nameUpdate,
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: const Text("OK"),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          setState(() {
-                                            FirebaseAuth.instance.currentUser!
-                                                .updateDisplayName(
-                                                    nameUpdate.text);
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            });
-                          },
-                          icon: const Icon(
-                            FontAwesomeIcons.pencil,
-                            size: 15,
-                          ))
-                    ],
-                  ),
-                ),
-                Text(
-                  FirebaseAuth.instance.currentUser!.email.toString(),
-                ),
-                Text(
-                    "${_selecteddate1.year - int.parse(FirebaseAuth.instance.currentUser!.photoURL.toString())}"),
-                ElevatedButton(
-                    onPressed: () {
-                      Get.to(LoginScreen());
-                    },
-                    child: Text("Çıxış"))
-              ],
-            ),
-          ),
-        ),
+        drawer: const DrawerScreen(),
         body: Container(
           constraints: const BoxConstraints.expand(),
           decoration: const BoxDecoration(
@@ -252,8 +155,7 @@ class _AddRecordState extends State<AddRecord> {
                         ),
                         Expanded(
                           child: Text(
-                            DateFormat('EEE, MMM d,' 'yy')
-                                .format(_selecteddate1),
+                            DateFormat('EEE, MMM d,' 'yy').format(selectedDate),
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 color: Colors.white,
@@ -275,7 +177,7 @@ class _AddRecordState extends State<AddRecord> {
                         return AlertDialog(
                           title: const Text("Qeyd  əlavə et"),
                           content: TextField(
-                            controller: note,
+                            controller: noteController,
                           ),
                           actions: <Widget>[
                             TextButton(
@@ -283,7 +185,7 @@ class _AddRecordState extends State<AddRecord> {
                               onPressed: () {
                                 Navigator.of(context).pop();
                                 setState(() {
-                                  _note = note.text;
+                                  _note = noteController.text;
                                 });
                               },
                             ),
@@ -328,24 +230,67 @@ class _AddRecordState extends State<AddRecord> {
                 width: MediaQuery.of(context).size.width / 2,
                 height: 40,
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueAccent,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16)),
+                  ),
                   onPressed: () {
                     createInfo();
 
                     setState(() {});
                   },
-                  child: Text(
+                  child: const Text(
                     "yadda saxla",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.blueAccent,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16)),
                   ),
                 ),
               )
             ],
           ),
         ));
+  }
+
+  createInfo() {
+    DocumentReference documentReference = trackerCollection.doc();
+
+    Map<String, String> info = {
+      "weight": Controller.selectedvalue.toString(),
+      "month": DateFormat('EEE, MMM d,' 'yy').format(selectedDate),
+      "userId": currentUser.uid
+    };
+    documentReference.set(info).whenComplete(() => {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const FlutterChart())),
+        });
+  }
+
+  void datePicker(BuildContext context) async {
+    selectedDate = await showDatePicker(
+            context: context,
+            initialDate: dateNow,
+            firstDate: dateNow.subtract(const Duration(days: 25000)),
+            lastDate: dateNow.add(const Duration(days: 30)),
+            builder: (context, child) {
+              return Theme(
+                  data: ThemeData.light().copyWith(
+                      colorScheme: const ColorScheme(
+                    brightness: Brightness.light,
+                    primary: Colors.black,
+                    onPrimary: Colors.white,
+                    secondary: Colors.yellow,
+                    onSecondary: Colors.yellowAccent,
+                    error: Colors.red,
+                    onError: Colors.orange,
+                    background: Colors.blueAccent,
+                    onBackground: Colors.blueGrey,
+                    surface: Colors.blue,
+                    onSurface: Colors.black26,
+                  )),
+                  child: child ?? const Text(""));
+            }) ??
+        selectedDate;
+
+    setState(() {});
   }
 }

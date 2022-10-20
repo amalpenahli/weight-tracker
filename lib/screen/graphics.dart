@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/instance_manager.dart';
 import 'package:getx/screen/add_record.dart';
+import 'package:getx/screen/home_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -21,6 +22,8 @@ class FlutterChart extends StatefulWidget {
 }
 
 class _FlutterChartState extends State<FlutterChart> {
+  //   late final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  // late final User currentUser =_firebaseAuth.currentUser!;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,7 +97,7 @@ class _FlutterChartState extends State<FlutterChart> {
                             xValueMapper: (dynamic sales, _) =>
                                 sales["month"],
                             yValueMapper: (dynamic sales, _) =>
-                                int.tryParse(sales["weight"]),
+                                int.tryParse(sales["weight"],),
                             color: Colors.orange,
                             dataLabelSettings:
                                 DataLabelSettings(isVisible: true)),
@@ -106,7 +109,7 @@ class _FlutterChartState extends State<FlutterChart> {
               
               ElevatedButton(
             onPressed: () {
-              Get.to(() => AddRecord());
+              Get.to(() => HomeScreen());
             },
             child: Text("add record"))
             ]),
